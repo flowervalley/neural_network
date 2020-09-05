@@ -9,15 +9,20 @@ class Net:
             np.random.randn(m, n) for n, m in zip(structure, structure[1:])
         ]
         self.biases = [np.random.rand(n, 1) for n in structure]
+        self.activations = [np.zeros((n, 1)) for n in structure]
+        # neuron values before activation function
+        self.z_values = [np.zeros((n, 1)) for n in structure]
 
     def feedforward(self, input):
         """Feed input vector through the network and return ouput vector."""
-        a = input
+        self.activations[0] = input
         for i in range(1, len(self.weights)):
-            a = self.activation_function(self.weights[i] @ a + self.biases[i])
-        return a
+            self.z_values[i] = (
+                self.weights[i] @ self.activations[i - 1] + self.biases[i]
+            )
+            self.activations[i] = self.activation_function(self.z_values[i])
+        return self.activations[-1]
 
     def activation_function(self, z):
         """sigmoid function"""
         return 1 / (1 + np.exp(-z))
-
