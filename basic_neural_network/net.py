@@ -4,25 +4,23 @@ import numpy as np
 class Net:
     def __init__(self, structure):
         """Initialize components based on specified structure."""
-        # weights[i] is the weight matrix from layer i-1 to layer i.
-        self.weights = [None] + [
-            np.random.randn(m, n) for n, m in zip(structure, structure[1:])
-        ]
-        self.biases = [np.random.rand(n, 1) for n in structure]
-        self.activations = [np.zeros((n, 1)) for n in structure]
-        # neuron values before activation function
-        self.z_values = [np.zeros((n, 1)) for n in structure]
+        # weight matrices
+        self.ws = [np.random.randn(m, n) for n, m in zip([0] + structure, structure)]
+        # biases
+        self.bs = [np.random.rand(n, 1) for n in structure]
+        # activations
+        self.ys = [np.zeros((n, 1)) for n in structure]
+        # z values
+        self.zs = [np.zeros((n, 1)) for n in structure]
 
     def feedforward(self, input):
         """Feed input vector through the network and return ouput vector."""
-        self.activations[0] = input
-        for i in range(1, len(self.weights)):
-            self.z_values[i] = (
-                self.weights[i] @ self.activations[i - 1] + self.biases[i]
-            )
-            self.activations[i] = self.activation_function(self.z_values[i])
-        return self.activations[-1]
+        self.ys[0] = input
+        for i in range(1, len(self.ws)):
+            self.zs[i] = self.ws[i] @ self.ys[i - 1] + self.bs[i]
+            self.ys[i] = self.g(self.zs[i])
+        return self.ys[-1]
 
-    def activation_function(self, z):
-        """sigmoid function"""
+    def g(self, z):
+        """activation function (sigmoid)"""
         return 1 / (1 + np.exp(-z))
