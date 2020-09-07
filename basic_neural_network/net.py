@@ -2,7 +2,7 @@ import numpy as np
 
 
 class Net:
-    def __init__(self, structure):
+    def __init__(self, structure, r=0.01):
         """Initialize components based on specified structure."""
         # weight matrices
         self.ws = [np.random.randn(m, n) for n, m in zip([0] + structure, structure)]
@@ -12,6 +12,8 @@ class Net:
         self.ys = [np.zeros((n, 1)) for n in structure]
         # z values
         self.zs = [np.zeros((n, 1)) for n in structure]
+        # learning rate
+        self.r = r
 
     def feedforward(self, input):
         """
@@ -41,8 +43,8 @@ class Net:
 
         # Update weights and biases based on partial derivatives.
         for i in range(1, len(self.ws)):
-            self.ws[i] -= 0.1 * (ds[i] * self.ys[i - 1].transpose())
-            self.bs[i] -= 0.1 * ds[i]
+            self.ws[i] -= self.r * (ds[i] * self.ys[i - 1].transpose())
+            self.bs[i] -= self.r * ds[i]
 
     def c(self, y, t):
         """cost function for actual y and expected t (MSE)"""
