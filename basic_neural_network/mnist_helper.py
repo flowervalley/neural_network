@@ -1,4 +1,3 @@
-#%%
 import numpy as np
 from mnist import MNIST
 
@@ -25,17 +24,3 @@ def load_training():
 def load_test():
     """Return MNIST test data and labels as tuple."""
     return _mnist_to_numpy(*_mndata.load_testing())
-
-
-def vector_to_image(vector):
-    """Transform image vector to image."""
-    return vector.reshape(28, 28)
-
-
-def vector_to_label(vector):
-    """Transform label vector to digit."""
-    s = (_reverse_vector * vector).sum()
-    return s - 1
-
-
-# %%
