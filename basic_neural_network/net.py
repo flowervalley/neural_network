@@ -50,6 +50,14 @@ class Net:
                 self.ws[i] -= learning_rate * ws_d[i] / len(batch)
                 self.bs[i] -= learning_rate * bs_d[i] / len(batch)
 
+    def evaluate(self, inputs, targets):
+        """Return cummulative MSE of computed outputs and targets."""
+        error = 0
+        for input, target in zip(inputs, targets):
+            output = self.feedforward(input)
+            error += self.c(output, target)
+        return error
+
     def backprop(self, input, target):
         """
         Return the partial derivatives with respect to weights and biases 
